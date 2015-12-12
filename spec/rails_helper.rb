@@ -9,6 +9,7 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'pundit/rspec'
 require 'factory_girl_rails'
+require 'ffaker'
 require 'database_cleaner'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
