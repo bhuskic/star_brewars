@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151212165759) do
+ActiveRecord::Schema.define(version: 20151213150954) do
+
+  create_table "role_permissions", force: :cascade do |t|
+    t.string   "name"
+    t.string   "policy_name"
+    t.string   "policy_scope"
+    t.integer  "role_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "role_permissions", ["role_id"], name: "index_role_permissions_on_role_id"
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
