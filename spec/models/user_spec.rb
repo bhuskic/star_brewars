@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let (:user) { create(:user) }
+  let (:user) { create(:brewmaster) }
 
   context "user attributes" do
     it { should respond_to :email }

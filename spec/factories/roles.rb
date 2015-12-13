@@ -12,7 +12,10 @@ FactoryGirl.define do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
           %w(index? show?).each do |action|
-            create(:role_permission, role: role, name: action, policy_name: policy)
+            create(:role_permission,
+                   role: role,
+                   name: action,
+                   policy_name: policy)
           end
         end
       end
@@ -28,7 +31,11 @@ FactoryGirl.define do
         policies.call.each do |policy|
           %w(index? show? create? update? destroy?).each do |action|
             policy_scope = "owner" if %w(update? destroy?).include?(action)
-            create(:role_permission, role: role, name: action, policy_name: policy, policy_scope: policy_scope)
+            create(:role_permission,
+                   role: role,
+                   name: action,
+                   policy_name: policy,
+                   policy_scope: policy_scope)
           end
         end
       end
@@ -43,7 +50,10 @@ FactoryGirl.define do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
           %w(index? show? create? update? destroy?).each do |action|
-            create(:role_permission, role: role, name: action, policy_name: policy)
+            create(:role_permission,
+                   role: role,
+                   name: action,
+                   policy_name: policy)
           end
         end
       end

@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true, if: '!password.nil?'
 
   has_and_belongs_to_many :roles
+  has_many :recipes, dependent: :destroy
 
   after_create :set_default_role
 
