@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe Role, type: :model do
   let (:role) { create(:guest_role) }
 
+  context "user attributes" do
+    it { should respond_to :name}
+    it { should respond_to :display_name }
+    it { should respond_to :users}
+    it { should respond_to :role_permissions}
+  end
+
   context "role attributes" do
     it { should respond_to :name}
     it { should respond_to :display_name}

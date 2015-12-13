@@ -3,6 +3,14 @@ require 'rails_helper'
 RSpec.describe Recipe do
   let (:recipe) { create(:recipe) }
 
+  context "messages" do
+    it { should respond_to :name }
+    it { should respond_to :beer_type }
+    it { should respond_to :beer_style }
+    it { should respond_to :procedure_description}
+    it { should respond_to :user}
+  end
+
   context 'attribute validation' do
     describe '#name' do
       it 'is not valid without a name' do

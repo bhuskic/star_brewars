@@ -3,9 +3,11 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let (:user) { create(:brewmaster) }
 
-  context "user attributes" do
+  context "messages" do
     it { should respond_to :email }
     it { should respond_to :name }
+    it { should respond_to :roles}
+    it { should respond_to :recipes}
   end
 
   context "attribute validations" do
