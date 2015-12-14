@@ -20,8 +20,8 @@ FactoryGirl.define do
     end
 
     trait :admin do
-      after(:create) do |user, evaluator|
-        brewmaster.roles << if role_created.call('brewmaster_jedi')
+      after(:create) do |brewmaster, evaluator|
+        brewmaster.roles << if role_created.call('brewmaster_yoda')
                               Role.find_by(name: 'brewmaster_yoda')
                             else
                               create(:admin_role, :with_permissions)
@@ -31,7 +31,7 @@ FactoryGirl.define do
 
     trait :user do
       after(:create) do |brewmaster, evaluator|
-        brewmaster.roles << if role_created.call('brewmaster_yoda')
+        brewmaster.roles << if role_created.call('brewmaster_jedi')
                               Role.find_by(name: 'brewmaster_jedi')
                             else
                               create(:user_role, :with_permissions)
