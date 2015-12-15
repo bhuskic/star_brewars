@@ -8,35 +8,31 @@ class ApplicationPolicy
   end
 
   def index?
-    admin_user?
+    resolver.authorized?(__method__)
   end
 
   def show?
-    admin_user?
+    resolver.authorized?(__method__)
   end
 
   def create?
-    admin_user?
+    resolver.authorized?(__method__)
   end
 
   def update?
-    admin_user?
+    resolver.authorized?(__method__)
   end
 
   def destroy?
-    admin_user?
+    resolver.authorized?(__method__)
   end
 
   def admin_user?
     user.roles.any? { |role| role.name == 'brewmaster_yoda' }
   end
 
-  def user_user?
-    user.roles.any? { |role| role.name == 'brewmaster_jedi' }
-  end
-
-  def guest_user?
-    user.roles.any? { |role| role.name == 'brewmaster_padawan' }
+  def resolver
+    resolver ||= UserAuthorizationResolver.new(user: user, context: self)
   end
 
   class Scope

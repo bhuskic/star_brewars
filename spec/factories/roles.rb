@@ -11,11 +11,20 @@ FactoryGirl.define do
     trait :with_permissions do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
-          %w(index? show?).each do |action|
-            create(:role_permission,
-                   role: role,
-                   name: action,
-                   policy_name: policy)
+          unless policy == "RolePolicy"
+            actions = if policy == "UserPolicy"
+                        %w(show?)
+                      else
+                        %w(index? show?)
+                      end
+            actions.each do |action|
+              policy_scope = "owner?" if action == "show?" && policy == "UserPolicy"
+              create(:role_permission,
+                     role: role,
+                     name: action,
+                     policy_name: policy,
+                     policy_scope: policy_scope)
+            end
           end
         end
       end
@@ -29,13 +38,24 @@ FactoryGirl.define do
     trait :with_permissions do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
-          %w(index? show? create? update? destroy?).each do |action|
-            policy_scope = "owner?" if %w(update? destroy?).include?(action)
-            create(:role_permission,
-                   role: role,
-                   name: action,
-                   policy_name: policy,
-                   policy_scope: policy_scope)
+          unless policy == "RolePolicy"
+            actions = if policy == "UserPolicy"
+                        %w(show?)
+                      elsif policy == "IngredientPolicy"
+                        %w(index? show?)
+                      else
+                        %w(index? show? create? update? destroy?)
+                      end
+            actions.each do |action|
+              policy_scope_required = (policy == "UserPolicy" && action == "show?") ||
+                                        %w(update? destroy?).include?(action)
+              policy_scope = "owner?" if policy_scope_required
+              create(:role_permission,
+                     role: role,
+                     name: action,
+                     policy_name: policy,
+                     policy_scope: policy_scope)
+            end
           end
         end
       end

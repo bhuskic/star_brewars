@@ -1,6 +1,7 @@
 class UserPolicy < ApplicationPolicy
-  def show?
-    admin_user? || user == record
+
+  def owner?
+    user == record
   end
 
   class Scope < Scope
