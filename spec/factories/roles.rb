@@ -1,6 +1,6 @@
 
 policies = -> {
-  %w(UserPolicy RolePolicy RecipePolicies IngredientPolicies)
+  %w(UserPolicy RolePolicy RecipePolicy IngredientPolicy)
 }
 
 FactoryGirl.define do
@@ -30,7 +30,7 @@ FactoryGirl.define do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
           %w(index? show? create? update? destroy?).each do |action|
-            policy_scope = "owner" if %w(update? destroy?).include?(action)
+            policy_scope = "owner?" if %w(update? destroy?).include?(action)
             create(:role_permission,
                    role: role,
                    name: action,

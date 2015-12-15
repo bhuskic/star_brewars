@@ -20,4 +20,8 @@ class RecipePolicy < ApplicationPolicy
   def destroy?
     admin_user? || (user_user? && user == record.user)
   end
+
+  def owner?
+    user == record.user
+  end
 end

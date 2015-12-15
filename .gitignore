@@ -15,6 +15,7 @@
 .dat*
 .repl_history
 build/
+.byebug_history
 
 ## Documentation cache and generated files:
 /.yardoc/
