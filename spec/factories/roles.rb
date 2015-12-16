@@ -13,12 +13,12 @@ FactoryGirl.define do
         policies.call.each do |policy|
           unless policy == "RolePolicy"
             actions = if policy == "UserPolicy"
-                        %w(show?)
+                        %w(show?, :update?)
                       else
                         %w(index? show?)
                       end
             actions.each do |action|
-              policy_scope = "owner?" if action == "show?" && policy == "UserPolicy"
+              policy_scope = "owner?" if %w(show? update?).include?(action) && policy == "UserPolicy"
               create(:role_permission,
                      role: role,
                      name: action,
@@ -40,14 +40,14 @@ FactoryGirl.define do
         policies.call.each do |policy|
           unless policy == "RolePolicy"
             actions = if policy == "UserPolicy"
-                        %w(show?)
+                        %w(show? update?)
                       elsif policy == "IngredientPolicy"
                         %w(index? show?)
                       else
                         %w(index? show? create? update? destroy?)
                       end
             actions.each do |action|
-              policy_scope_required = (policy == "UserPolicy" && action == "show?") ||
+              policy_scope_required = (policy == "UserPolicy" && %w(show? update?).include?(action)) ||
                                         %w(update? destroy?).include?(action)
               policy_scope = "owner?" if policy_scope_required
               create(:role_permission,

@@ -41,6 +41,9 @@ FactoryGirl.define do
 
     trait :with_recipes do
       after(:create) do |brewmaster, evaluator|
+        #rand(4..8).times do 
+        #  create(:recipe, user: brewmaster)
+        #end
         create_list(:recipe, rand(4..8), user: brewmaster)
       end
     end

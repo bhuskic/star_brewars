@@ -27,10 +27,6 @@ class ApplicationPolicy
     resolver.authorized?(__method__)
   end
 
-  def admin_user?
-    user.roles.any? { |role| role.name == 'brewmaster_yoda' }
-  end
-
   def resolver
     resolver ||= UserAuthorizationResolver.new(user: user, context: self)
   end

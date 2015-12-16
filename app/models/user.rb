@@ -12,11 +12,24 @@ class User < ActiveRecord::Base
   has_many :recipes, dependent: :destroy
 
   after_create :set_default_role
+  before_create :set_auth_token
+
+  def set_auth_token
+    return if auth_token.present?
+    self.auth_token = generate_auth_token
+  end
+
+
+  private
 
   def set_default_role
     if self.roles.empty?
       self.roles << Role.find_by(name: 'brewmaster_padawan')
     end
+  end
+
+  def generate_auth_token
+    SecureRandom.urlsafe_base64
   end
 
 end

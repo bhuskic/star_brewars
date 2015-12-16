@@ -1,13 +1,35 @@
-class ApplicationController < ActionController::API
-  protect_from_forgery
+class ApplicationController < ActionController::Base
   include Pundit
 
-  rescue_from Pundit::NotAuthorizedError, with: user_not_authorized
+  protect_from_forgery
 
-  private
+  skip_before_action :verify_authenticity_token, only: [:update, :destroy]
+  before_action :authenticate
+  after_action :verify_authorized
 
-  def user_not_authorized
-    flash[:alert] = "You are not authorized to perform this action."
-    redirect_to(request.referrer || root_path)
+  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+  attr_reader :current_user
+
+  def authenticate
+    authenticate_or_request_with_http_token do |token, options|
+      @current_user = User.find_by(auth_token: token)
+    end
+  end
+
+  protected
+
+  def not_authenticated
+    response.headers['WWW-Authenticate'] = "Token realm=Application"
+    render json: { error: 'not authorized' }, status: 401
+  end
+
+  def not_authorized
+    render json: { errors: ['not authorized'] }, status: 403
+  end
+
+  def not_found
+    render json: { error: 'not found' }, status: 404
   end
 end
