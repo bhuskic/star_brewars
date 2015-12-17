@@ -13,7 +13,7 @@ FactoryGirl.define do
         policies.call.each do |policy|
           unless policy == "RolePolicy"
             actions = if policy == "UserPolicy"
-                        %w(show?, :update?)
+                        %w(show? update?)
                       else
                         %w(index? show?)
                       end
