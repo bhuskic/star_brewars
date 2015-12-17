@@ -32,4 +32,8 @@ class ApplicationController < ActionController::Base
   def not_found
     render json: { error: 'not found' }, status: 404
   end
+
+  def invalid_resource errors
+    render json: { errors: errors }
+  end
 end

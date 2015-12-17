@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe V1::UsersController, type: :controller do
   let (:admin) { create(:brewmaster, :admin) }
   let (:user) { create(:brewmaster, :user) }
-  let (:some_other_user) { create(:brewmaster, :user) }
+  let (:some_other_user) { create(:brewmaster) }
 
   def add_token token
     request.env['HTTP_AUTHORIZATION'] =
@@ -69,6 +69,44 @@ RSpec.describe V1::UsersController, type: :controller do
 
   describe "POST create" do
 
+    let (:new_user_params) {
+      { user:
+        { name: 'new_user',
+          email: 'newuser@email.com',
+          password: 'newuserpwd',
+          password_confirmation: 'newuserpwd'
+        }
+      }
+    }
+    before(:example) {
+      create(:guest_role, :with_permissions)
+    }
+
+    context "success" do
+      it "returns 201 status" do
+        post :create, new_user_params
+        expect(response).to have_http_status(201)
+      end
+
+      it "returns created user" do
+        post :create, new_user_params
+        expect(response.body).to include('{"user":{"id"')
+      end
+    end
+
+    context "failure" do
+      it "returns invalid resource code" do
+        new_user_params[:user][:email] = "newuseremail"
+        post :create, new_user_params
+        expect(response).to have_http_status(422)
+      end
+
+      it "returns error message" do
+        new_user_params[:user][:password] = ""
+        post :create, new_user_params
+        expect(response.body).to include('"password":["can\'t be blank"]')
+      end
+    end
   end
 
   describe 'PUT update' do

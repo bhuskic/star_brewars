@@ -1,5 +1,7 @@
 module V1
   class UsersController < ApplicationController
+    before_action :authenticate, except: [:create]
+
     def index
       authorize current_user
       users = User.all
@@ -13,6 +15,19 @@ module V1
       user = User.find(params[:id])
       authorize user
       render(json: user, status: 200)
+    end
+
+    def create
+      skip_authorization
+      user = User.create(user_params)
+      if user && user.valid?
+        status = 201
+        json = UserSerializer.new(user)
+      else
+        status = 422
+        json = user.errors
+      end
+      render  json: json , status: status
     end
 
     def update
