@@ -47,12 +47,13 @@ module V1
       user = User.find(params[:id])
       authorize user
       if user.destroy
-        status = 200
-        json = { message: 'User successfuly deleted.' }
+        return render_response(200, { message: 'User successfuly deleted.'})
       else
-        status = 500
-        json = { error: 'There was an error while deleting user.' }
+        return render_response(500, { error: 'User couldnt be deleted' })
       end
+    end
+
+    def render_response(status, json)
       render json: json, status: status
     end
 

@@ -1,23 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe "Recipes API" do
-  before(:example) do
-    @user = create(:brewmaster, :user, :with_recipes)
-  end
-  describe '/api/v1/recipe' do
-    it "should send a list of recipes" do
-      all_recipes = Recipe.all
+  let! (:user) { create(:brewmaster, :user, :with_recipes) }
 
-      get v1_recipes_path, {}, { 'Authorization' => "Token token=#{@user.auth_token}" }
+  it "should send a list of recipes" do
+    all_recipes = Recipe.all
 
-      json = JSON.parse(response.body)
+    get v1_recipes_path, {}, { 'Authorization' => "Token token=#{user.auth_token}" }
 
-      expect(response).to be_success
-      expect(json['recipes'].length).to eq(all_recipes.length)
-    end
-  end
+    json = JSON.parse(response.body)
 
-  describe "" do
-
+    expect(response).to be_success
+    expect(json['recipes'].length).to eq(all_recipes.length)
   end
 end
