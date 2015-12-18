@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :ingredient do
-    sequence(:name, 0) { |n| "Ingredient #{n}" }
-    sequence(:type_name, 0) { |n| %w(Malt Hops Yeast Spices)[n % 4] }
+    grocery
     sequence(:amount, 0) { |n|
       [
         "#{rand(250..6000)} g",

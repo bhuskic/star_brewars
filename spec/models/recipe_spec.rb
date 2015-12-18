@@ -9,6 +9,8 @@ RSpec.describe Recipe do
     it { should respond_to :beer_style }
     it { should respond_to :procedure_description}
     it { should respond_to :user}
+    it { should respond_to :ingredients}
+    it { should respond_to :grocery_ingredients}
   end
 
   context 'attribute validation' do

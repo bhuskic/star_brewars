@@ -13,7 +13,11 @@ FactoryGirl.define do
     sequence(:procedure_description,0) { |n| n.even? ? 'Single mash infusion at 63' : 'Multi mash infusion at 40, 60, 70 degrees' }
 
     after(:create) do |recipe, evaluator|
-      create_list(:ingredient, rand(4..12), recipe: recipe)
+      #rand(4..7).times do |n|
+      #  grocery = create(:grocery)
+      #  create(:ingredient, grocery: grocery, recipe: recipe)
+      #end
+      create_list(:ingredient, rand(4..7), recipe: recipe)
     end
   end
 end

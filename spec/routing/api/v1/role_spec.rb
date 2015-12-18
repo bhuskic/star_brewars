@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'routing to Role API' do
+RSpec.describe 'routing to role api' do
   it 'routes GET /api/v1/roles to v1/roles#index' do
     expect(get: '/api/v1/roles').to route_to(
       controller: 'v1/roles',

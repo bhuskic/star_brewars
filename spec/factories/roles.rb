@@ -1,9 +1,13 @@
 
 policies = -> {
-  %w(UserPolicy RolePolicy RecipePolicy IngredientPolicy)
+  %w(UserPolicy RolePolicy RecipePolicy GroceryPolicy)
 }
 
 FactoryGirl.define do
+  factory :role do
+    sequence(:name, 0) { |n| "Role_#{n}"  }
+    sequence(:display_name, 0) { |n| "Role_#{n}" }
+  end
   factory :guest_role, class: Role do
     name "brewmaster_padawan"
     display_name "Brewmaster Padawan"
@@ -11,7 +15,7 @@ FactoryGirl.define do
     trait :with_permissions do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
-          unless policy == "RolePolicy"
+          unless %w(RolePolicy GroceryPolicy).include?(policy)
             actions = if policy == "UserPolicy"
                         %w(show? update?)
                       else
@@ -38,11 +42,9 @@ FactoryGirl.define do
     trait :with_permissions do
       after(:create) do |role, evaluator|
         policies.call.each do |policy|
-          unless policy == "RolePolicy"
+          unless %w(RolePolicy GroceryPolicy).include?(policy)
             actions = if policy == "UserPolicy"
                         %w(show? update?)
-                      elsif policy == "IngredientPolicy"
-                        %w(index? show?)
                       else
                         %w(index? show? create? update? destroy?)
                       end

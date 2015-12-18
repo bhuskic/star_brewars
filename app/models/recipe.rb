@@ -3,5 +3,6 @@ class Recipe < ActiveRecord::Base
   validates_presence_of :beer_type, :beer_style
 
   belongs_to :user
-  has_many :ingredients
+  has_many :ingredients, dependent: :destroy
+  has_many :grocery_ingredients, through: :ingredients
 end
