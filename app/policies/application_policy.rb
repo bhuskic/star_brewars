@@ -7,24 +7,10 @@ class ApplicationPolicy
     @record = record
   end
 
-  def index?
-    resolver.authorized?(__method__)
-  end
-
-  def show?
-    resolver.authorized?(__method__)
-  end
-
-  def create?
-    resolver.authorized?(__method__)
-  end
-
-  def update?
-    resolver.authorized?(__method__)
-  end
-
-  def destroy?
-    resolver.authorized?(__method__)
+  [:index?, :show?, :create?, :update?, :destroy?].each do |method_name|
+    define_method(method_name) do
+      resolver.authorized?(method_name)
+    end
   end
 
   def resolver
