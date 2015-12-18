@@ -1,5 +1,5 @@
 class UserAuthorizationResolver
-  attr_reader :user, :context, :roles, :role_authorizer
+  attr_reader :user, :context, :roles
 
   def initialize(user:, context:)
     @user = user

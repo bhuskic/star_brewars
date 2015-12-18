@@ -17,7 +17,8 @@ class RoleAuthorizationResolver
   end
 
   def policy_scope_satisfied?
-    return true if permission_for_action.nil? || permission_for_action.policy_scope.nil?
+    return true if permission_for_action.nil? ||
+      permission_for_action.policy_scope.nil?
     policy.send(permission_for_action.policy_scope)
   rescue NoMethodError
     false

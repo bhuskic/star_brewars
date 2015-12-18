@@ -6,12 +6,6 @@ RSpec.describe V1::UsersController, type: :controller do
   let (:user) { create(:brewmaster, :user) }
   let (:some_other_user) { create(:brewmaster) }
 
-  def add_token token
-    request.env['HTTP_AUTHORIZATION'] =
-      ActionController::HttpAuthentication::Token.encode_credentials(
-        "#{token}")
-  end
-
   describe 'GET index' do
     context 'authorized' do
       before(:example) {
@@ -23,7 +17,7 @@ RSpec.describe V1::UsersController, type: :controller do
         expect(response).to have_http_status(200)
       end
 
-      it "returns users" do
+      it 'returns users' do
         get :index
         expect(response.body).to include('{"users":[{"id":')
       end
@@ -55,7 +49,7 @@ RSpec.describe V1::UsersController, type: :controller do
 
       it 'returns user' do
         get :show, id: user.id
-        expect(response.body).to include('{"user":{"id":')
+        expect(response.body).to eq(UserSerializer.new(user).to_json)
       end
     end
 
@@ -67,7 +61,7 @@ RSpec.describe V1::UsersController, type: :controller do
     end
   end
 
-  describe "POST create" do
+  describe 'POST create' do
 
     let (:new_user_params) {
       { user:
@@ -82,29 +76,29 @@ RSpec.describe V1::UsersController, type: :controller do
       create(:guest_role, :with_permissions)
     }
 
-    context "success" do
-      it "returns 201 status" do
+    context 'success' do
+      it 'returns 201 status' do
         post :create, new_user_params
         expect(response).to have_http_status(201)
       end
 
-      it "returns created user" do
+      it 'returns created user' do
         post :create, new_user_params
-        expect(response.body).to include('{"user":{"id"')
+        expect(response.body).to eq(UserSerializer.new(User.last).to_json)
       end
     end
 
-    context "failure" do
-      it "returns invalid resource code" do
-        new_user_params[:user][:email] = "newuseremail"
+    context 'failure' do
+      it 'returns invalid resource code' do
+        new_user_params[:user][:email] = 'newuseremail'
         post :create, new_user_params
         expect(response).to have_http_status(422)
       end
 
-      it "returns error message" do
-        new_user_params[:user][:password] = ""
+      it 'returns error message' do
+        new_user_params[:user][:password] = ''
         post :create, new_user_params
-        expect(response.body).to include('"password":["can\'t be blank"]')
+        expect(response.body).to eq('{"password":["can\'t be blank"]}')
       end
     end
   end
@@ -117,7 +111,7 @@ RSpec.describe V1::UsersController, type: :controller do
     context 'authorized' do
       context "successful update" do
         it 'returns success status' do
-          user.email = "new@email.com"
+          user.email = 'new@email.com'
           put :update, id: user.id, user: user.as_json
           expect(response).to have_http_status(200)
         end
@@ -125,7 +119,7 @@ RSpec.describe V1::UsersController, type: :controller do
         it 'returns updated user' do
           user.name = "new_name"
           put :update, id: user.id, user: user.as_json
-          expect(response.body).to include('"user":{"id"')
+          expect(response.body).to eq(UserSerializer.new(user).to_json)
         end
       end
 
@@ -139,7 +133,7 @@ RSpec.describe V1::UsersController, type: :controller do
         it 'returns error message' do
           user.email = 'irregular_email.com'
           put :update, id: user.id, user: user.as_json
-          expect(response.body).to include('{"error":"There was an error while updating user."}')
+          expect(response.body).to include('{"email":["is invalid"]}')
         end
       end
     end
@@ -149,7 +143,7 @@ RSpec.describe V1::UsersController, type: :controller do
         add_token(user.auth_token)
       }
 
-      it 'returns failure status' do
+      it 'returns forbidden status' do
         put :update, id: some_other_user.id, user: some_other_user.as_json
         expect(response).to have_http_status(403)
       end
@@ -179,7 +173,9 @@ RSpec.describe V1::UsersController, type: :controller do
       before(:example) {
         add_token(user.auth_token)
       }
-      context 'success' do
+      it 'returns forbidden status' do
+        delete :destroy, id: some_other_user.id
+        expect(response).to have_http_status(403)
       end
     end
   end

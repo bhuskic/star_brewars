@@ -10,6 +10,7 @@ FactoryGirl.define do
         ['Checz Pilsner', 'Munchner Helle', 'Bock Bier', 'Eisbock', 'Schwarz bier'].sample
     }
     sequence(:beer_type,0) { |n| n.even? ? 'Ale' : 'Lager' }
+    sequence(:procedure_description,0) { |n| n.even? ? 'Single mash infusion at 63' : 'Multi mash infusion at 40, 60, 70 degrees' }
 
     after(:create) do |recipe, evaluator|
       create_list(:ingredient, rand(4..12), recipe: recipe)

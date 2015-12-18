@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def render_response(status, json)
+    render json: json, status: status
+  end
+
   def not_authenticated
     response.headers['WWW-Authenticate'] = "Token realm=Application"
     render json: { error: 'not authorized' }, status: 401

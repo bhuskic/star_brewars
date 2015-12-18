@@ -21,26 +21,20 @@ module V1
       skip_authorization
       user = User.create(user_params)
       if user && user.valid?
-        status = 201
-        json = UserSerializer.new(user)
+        return render_response(201, UserSerializer.new(user))
       else
-        status = 422
-        json = user.errors
+        return render_response(422, user.errors)
       end
-      render  json: json , status: status
     end
 
     def update
       user = User.find(params[:id])
       authorize user
       if user.update_attributes(user_params)
-        status = 200
-        json = UserSerializer.new(user)
+        return render_response(200, UserSerializer.new(user))
       else
-        status = 500
-        json = { error: 'There was an error while updating user.' }
+        return render_response(500, user.errors)
       end
-      render  json: json , status: status
     end
 
     def destroy
@@ -49,12 +43,8 @@ module V1
       if user.destroy
         return render_response(200, { message: 'User successfuly deleted.'})
       else
-        return render_response(500, { error: 'User couldnt be deleted' })
+        return render_response(500, user.errors)
       end
-    end
-
-    def render_response(status, json)
-      render json: json, status: status
     end
 
     private
